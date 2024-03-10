@@ -1,0 +1,78 @@
+Краткое пояснение к проекту:
+- всего создано 5 пользователей;
+- из этих 5 пользователей 2 автора
+
+
+ВЫПОЛНЕНИЕ КОМАНД В КОНСОЛИ DJANGO SHELL
+
+1. Создать двух (в проекте создано 5) пользователей (с помощью метода User.objects.create_user('username')).
+
+	1. User.objects.create(username='RafYusupov') - еще и автор
+	2. User.objects.create(username='DungDinh')
+	3. User.objects.create(username='SaitBakh') - еще и автор
+	4. User.objects.create(username='ArtMalts')
+	5. User.objects.create(username='NikLosev')
+
+2. Создать два объекта модели Author, связанные с пользователями.
+	Author.objects.create(user_id=1)
+	Author.objects.create(user_id=3)
+
+3. Добавить 4 категории в модель Category.
+	Category.objects.create(category='Метрология') 
+	Category.objects.create(category='Физ химия') 
+	Category.objects.create(category='XRF анализ') 
+	Category.objects.create(category='AAS анализ') 
+
+4. Добавить 2 статьи ('AL') и 1 новость ('NS' по умолчанию).
+	Post.objects.create(author_id=1, postType='AL'......) 
+	Post.objects.create(author_id=1, postType='AL'......) 
+	Post.objects.create(author_id=2, ......) 
+
+
+5. Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий).
+	PostCategory.objects.create(post_id=1, category_id=1) 
+	PostCategory.objects.create(post_id=1, category_id=3) 
+	PostCategory.objects.create(post_id=1, category_id=4) 
+	PostCategory.objects.create(post_id=2, category_id=2) 
+	PostCategory.objects.create(post_id=3, category_id=1) 
+
+
+6. Создать как минимум 4 комментария к разным объектам модели Post (в каждом объекте должен быть как минимум один комментарий).
+	Comment.objects.create(post_id=1.....) 
+	Comment.objects.create(post_id=1.....) 
+	.........
+	Comment.objects.create(post_id=2.....) 
+	........
+
+7. Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов.
+	post_1=Post.objects.create(pk=1)
+	post_1.like() 
+	post_1.dislike() 
+	post_2=Post.objects.create(pk=2)
+	post_2.like() 
+	post_2.dislike() 
+
+	.....
+
+	comm_1=Comment.objects.create(pk=1)
+	comm_1.like() 
+	comm_1.dislike() 
+	
+	........
+
+8.Обновить рейтинги пользователей.
+	auth_1=Author.objects.create(pk=1) 
+	auth_1.update_raiting()
+	........
+
+9.Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+	Comment.objects.all().order_by('-raiting').values('user__username','user_id')[0] вывод лучшего комментатора
+	Author.objects.all().order_by('-raiting').values('user__username','user_id')[0] вывод автора с наибольшим рейтингом
+
+10. Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
+Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+	 pst=Post.objects.all().order_by('-raiting').values('raiting','title','create_time','author__user__username')[0]
+
+11. Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+	Comment.objects.filter(post_id=pst['pk']).values('user__username','raiting','create_time','comment_text')
+	
